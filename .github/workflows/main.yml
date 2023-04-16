@@ -28,15 +28,6 @@ jobs:
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
       - name: Install dependencies
         run: pnpm install
         working-directory: ./ci-cd-cypress
@@ -44,7 +35,6 @@ jobs:
         uses: cypress-io/github-action@master
         with:
           start: |
-            cypress install
             pnpm build
             pnpm dev
           wait-on: http://localhost:3000
