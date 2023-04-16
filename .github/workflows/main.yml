@@ -53,7 +53,7 @@ jobs:
        - name: Run integration tests with cypress.
          uses: cypress-io/github-action@master
          with:
-          start: pnpm dev
+          start: pnpm start
           wait-on: http://localhost:3000
           working-directory: ./ci-cd-cypress/build
           
