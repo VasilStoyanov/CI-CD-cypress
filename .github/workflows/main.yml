@@ -13,13 +13,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18.12.1
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2    
         id: pnpm-install
         with:
-          version: 7
+          version: 8.2.0
           run_install: false
 
       - name: Get pnpm store directory
@@ -39,7 +39,7 @@ jobs:
         with:
           name: build
           if-no-files-found: error
-          path: ./ci-cd-cypress/build
+          path: ./ci-cd-cypress/build & ./ci-cd-cypress/pnpm-lock.yaml
   Cypress:
      needs: Install
      runs-on: ubuntu-latest
