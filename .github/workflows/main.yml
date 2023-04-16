@@ -15,8 +15,8 @@ jobs:
         with:
           node-version: 16
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2    
         id: pnpm-install
         with:
           version: 7
@@ -27,15 +27,18 @@ jobs:
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+          
       - name: Install dependencies
         run: pnpm install
         working-directory: ./ci-cd-cypress
+        
       - name: Save build folder
         uses: actions/upload-artifact@v3
         with:
           name: build
           if-no-files-found: error
           path: build
+          working-directory: ./ci-cd-cypress
   Cypress:
      needs: Install
      runs-on: ubuntu-latest
