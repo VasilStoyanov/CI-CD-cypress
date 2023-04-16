@@ -53,6 +53,12 @@ jobs:
      needs: Install
      runs-on: ubuntu-latest
      steps:
+       - name: Install pnpm
+         uses: pnpm/action-setup@v2    
+         id: pnpm-install
+         with:
+          version: 8.2.0
+          run_install: false
        - name: Download the build folder
          uses: actions/download-artifact@v3
          with:
@@ -62,8 +68,8 @@ jobs:
          uses: cypress-io/github-action@master
          with:
           start: |
-            npm install
-            npm start
+            pnpm install
+            pnpm start
           wait-on: http://localhost:3000
           working-directory: ./ci-cd-cypress/build
           
