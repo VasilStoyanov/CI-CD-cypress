@@ -1,10 +1,9 @@
 
 on:
   - push
-  - pull_request
 
 jobs:
-  cache-and-install:
+  Install:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,8 +15,8 @@ jobs:
         with:
           node-version: 16
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2    
         id: pnpm-install
         with:
           version: 7
@@ -28,16 +27,34 @@ jobs:
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+          
       - name: Install dependencies
         run: pnpm install
         working-directory: ./ci-cd-cypress
-      - name: Run integration tests with cypress.
-        uses: cypress-io/github-action@master
+        
+      - name: Save build folder
+        uses: actions/upload-artifact@v3
         with:
+          name: build
+          if-no-files-found: error
+          path: ./ci-cd-cypress
+  Cypress:
+     needs: Install
+     runs-on: ubuntu-latest
+     steps:
+       - name: Download the build folder
+         uses: actions/download-artifact@v3
+         with:
+          name: build
+          path: ./ci-cd-cypress
+       - name: Run integration tests with cypress.
+         uses: cypress-io/github-action@master
+         with:
           start: |
             pnpm build
             pnpm dev
           wait-on: http://localhost:3000
           working-directory: ./ci-cd-cypress
+          
         
   
