@@ -48,9 +48,12 @@ jobs:
           name: build
           if-no-files-found: error
           path: |
-            ./ci-cd-cypress/build
+            ./ci-cd-cypress/.next
             ./ci-cd-cypress/package.json
             ./ci-cd-cypress/pnpm-lock.yaml
+            ./ci-cd-cypress/cypress
+            ./ci-cd-cypress/cypress.config.ts
+            ./ci-cd-cypress/tsconfig.json
   Cypress:
      needs: Install
      runs-on: ubuntu-latest
