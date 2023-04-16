@@ -40,3 +40,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         working-directory: ./ci-cd-cypress
+      - name: Run integration tests with cypress.
+        uses: cypress-io/github-action@master
+        with:
+          start: |
+            pnpm build
+            pnpm dev
+          wait-on: http://localhost:3000
+          working-directory: ./ci-cd-cypress
+        
+  
