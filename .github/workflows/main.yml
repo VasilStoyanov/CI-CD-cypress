@@ -37,8 +37,7 @@ jobs:
         with:
           name: build
           if-no-files-found: error
-          path: build
-          working-directory: ./ci-cd-cypress
+          path: ./ci-cd-cypress
   Cypress:
      needs: Install
      runs-on: ubuntu-latest
@@ -47,7 +46,7 @@ jobs:
          uses: actions/download-artifact@v3
          with:
           name: build
-          path: build
+          path: ./ci-cd-cypress
        - name: Run integration tests with cypress.
          uses: cypress-io/github-action@master
          with:
