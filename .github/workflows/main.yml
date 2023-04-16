@@ -54,7 +54,7 @@ jobs:
          with:
           start: pnpm dev
           wait-on: http://localhost:3000
-          working-directory: ./ci-cd-cypress
+          working-directory: ./ci-cd-cypress/build
           
         
   
