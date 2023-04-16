@@ -39,3 +39,4 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+        working-directory: ./ci-cd-cypress
