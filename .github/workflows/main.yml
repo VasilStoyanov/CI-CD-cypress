@@ -51,6 +51,8 @@ jobs:
             ./ci-cd-cypress/.next
             ./ci-cd-cypress/package.json
             ./ci-cd-cypress/pnpm-lock.yaml
+            ./ci-cd-cypress/cypress
+            ./ci-cd-cypress/cypress.config.ts
   Cypress:
      needs: Install
      runs-on: ubuntu-latest
