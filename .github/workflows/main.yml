@@ -39,7 +39,9 @@ jobs:
         with:
           name: build
           if-no-files-found: error
-          path: ./ci-cd-cypress/build
+          path: |
+            ./ci-cd-cypress/build
+            ./ci-cd-cypress/pnpm-lock.yaml
   Cypress:
      needs: Install
      runs-on: ubuntu-latest
