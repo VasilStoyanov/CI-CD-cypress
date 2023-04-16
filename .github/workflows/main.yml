@@ -30,10 +30,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         working-directory: ./ci-cd-cypress
+      - name: Save build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          if-no-files-found: error
+          path: build
   Cypress:
      needs: Install
      runs-on: ubuntu-latest
      steps:
+       - name: Download the build folder
+         uses: actions/download-artifact@v3
+         with:
+          name: build
+          path: build
        - name: Run integration tests with cypress.
          uses: cypress-io/github-action@master
          with:
