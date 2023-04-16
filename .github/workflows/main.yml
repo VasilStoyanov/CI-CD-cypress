@@ -31,6 +31,7 @@ jobs:
         run: pnpm install
         working-directory: ./ci-cd-cypress
   Cypress:
+     needs: Install
      runs-on: ubuntu-latest
      steps:
        - name: Run integration tests with cypress.
