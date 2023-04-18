@@ -1,10 +1,9 @@
 
 on:
   - push
-  - pull_request
 
 jobs:
-  cache-and-install:
+  Install:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,13 +13,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18.12.1
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2    
         id: pnpm-install
         with:
-          version: 7
+          version: 8.2.0
           run_install: false
 
       - name: Get pnpm store directory
@@ -28,16 +27,56 @@ jobs:
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      - name: Install dependencies
-        run: pnpm install
-        working-directory: ./ci-cd-cypress
-      - name: Run integration tests with cypress.
-        uses: cypress-io/github-action@master
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
         with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+          
+      - name: Install dependencies
+        run: |
+          pnpm install
+          pnpm build
+        working-directory: ./ci-cd-cypress
+        
+      - name: Save build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          if-no-files-found: error
+          path: |
+            ./ci-cd-cypress/.next
+            ./ci-cd-cypress/package.json
+            ./ci-cd-cypress/pnpm-lock.yaml
+            ./ci-cd-cypress/cypress
+            ./ci-cd-cypress/cypress.config.ts
+            ./ci-cd-cypress/tsconfig.json
+  Cypress:
+     needs: Install
+     runs-on: ubuntu-latest
+     steps:
+       - name: Install pnpm
+         uses: pnpm/action-setup@v2    
+         id: pnpm-install
+         with:
+          version: 8.2.0
+          run_install: false
+       - name: Download the build folder
+         uses: actions/download-artifact@v3
+         with:
+          name: build
+          path: ./ci-cd-cypress
+       - name: Run integration tests with cypress.
+         uses: cypress-io/github-action@master
+         with:
           start: |
-            pnpm build
-            pnpm dev
+            pnpm install
+            pnpm start
           wait-on: http://localhost:3000
           working-directory: ./ci-cd-cypress
+          
         
   
